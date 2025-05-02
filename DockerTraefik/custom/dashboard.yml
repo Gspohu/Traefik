@@ -1,7 +1,7 @@
 http:
   routers:
     api:
-      rule: Host(`traefik.cairngit.eu`)
+      rule: Host(`traefik.skwatt.eu`)
       service: api@internal
       entryPoints:
         - websecure
