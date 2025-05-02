@@ -1,0 +1,36 @@
+version: '3.6'
+
+services:
+  reverse-proxy:
+    image: traefik:latest
+    container_name: traefik
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --log.level=DEBUG
+      - --log.filePath=/var/log/traefik_error.log
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/traefik.yml:ro
+      - ./custom/:/etc/traefik/custom/:ro
+      - ./traefik_ssl:/letsencrypt
+      - ./traefik_access.log:/var/log/traefik_access.log
+      - ./traefik_error.log:/var/log/traefik_error.log
+    networks:
+      - traefik
+    restart: unless-stopped
+
+networks:
+  traefik:
+    driver: bridge 
+    #enable_ipv6: true

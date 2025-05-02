@@ -1,0 +1,51 @@
+api:
+  dashboard: true
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: :443
+    forwardedHeaders:
+      insecure: true
+    http:
+      tls:
+        certResolver: myresolver
+
+serversTransport:
+  maxIdleConnsPerHost: 100
+  forwardingTimeouts:
+    dialTimeout: 30s
+    responseHeaderTimeout: 300s
+    idleConnTimeout: 300s
+
+providers:
+  docker:
+    exposedByDefault: false
+
+  file:
+    directory: /etc/traefik/custom/
+    watch: true
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "gouville.tom@cairn-devices.eu"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: web
+
+accessLog:
+  filePath: "/var/log/traefik_access.log"
+  bufferingSize: 1000
+
+errorLog:
+  filePath: "/var/log/traefik_error.log"
+  bufferingSize: 1000
+

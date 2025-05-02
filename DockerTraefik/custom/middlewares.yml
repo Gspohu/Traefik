@@ -1,0 +1,30 @@
+http:
+  middlewares:
+    secHeaders:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        accessControlAllowMethods:
+          - GET
+          - OPTIONS
+          - PUT
+          - POST
+          - PATCH
+        accessControlAllowHeaders:
+          - "content-type"
+        accessControlAllowCredentials: true
+        accessControlMaxAge: 100
+        addVaryHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+    compressMid:
+      compress:
+        excludedContentTypes:
+          - text/event-stream
+    auth:
+      digestAuth:
+         users:
+           - "admin:traefik:9e6176b7dd282b85ff925033039723b0"
